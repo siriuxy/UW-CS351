@@ -336,13 +336,6 @@ isSmall=((x+y)>>31)&1;
  */
 int ilog2(int x) {
 /* a combination of bitTo1 and bitCount */
-x=x|(x>>1);
-x=x|(x>>2);
-x=x|(x>>4);
-x=x|(x>>8);
-x=x|(x>>16);
-
-
 
 int twoGrouper=0x55;//used 55 instead of AA to avoid arithmetic shift problem
 int fourGrouper=0x33;
@@ -350,6 +343,15 @@ int eightGrouper=0xF;
 int sixteenGrouper=0xFF;
 int thirtytwoGrouper=0xFF;
 //printf("ater assignemtn\n 2, %x \n 4, %x\n 8, %x\n 16,%x \n 32,%x\n",twoGrouper,fourGrouper,eightGrouper,sixteenGrouper,thirtytwoGrouper);  
+
+
+x=x|(x>>1);
+x=x|(x>>2);
+x=x|(x>>4);
+x=x|(x>>8);
+x=x|(x>>16);
+
+
 twoGrouper=((((((twoGrouper<<8)+twoGrouper)<<8)+twoGrouper)<<8)+twoGrouper);
 x=(x&twoGrouper)+((x>>1)&twoGrouper);
 fourGrouper=((((((fourGrouper<<8)+fourGrouper)<<8)+fourGrouper)<<8)+fourGrouper);
