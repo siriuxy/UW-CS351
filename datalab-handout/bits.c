@@ -202,6 +202,8 @@ x=(x>>n)&mask; //forgot to move x by n
  */
 int bitCount(int x) {
 /*idea: count 1s in a group of 2, then of 4, of 8, of 16, and eventually of 32 */
+
+
 int twoGrouper=0x55;//used 55 instead of AA to avoid arithmetic shift problem
 int fourGrouper=0x33;
 int eightGrouper=0xF;
@@ -314,7 +316,16 @@ return x&(!!store);
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  return 2;
+int isEqual;
+int isSmall;
+int isNegVsPos=(x>>31)&(~(y>>31))&1;
+int isPosVsNeg=(~(x>>31))&((y>>31))&1;
+y=(~y)+1;
+isEqual=!(x+y);
+isSmall=((x+y)>>31)&1;
+
+
+ return isNegVsPos|(((~isPosVsNeg)&1)&(isEqual|isSmall));//feels like writing an if condition with bitwise operators....
 }
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
@@ -324,10 +335,35 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4
  */
 int ilog2(int x) {
+/* a combination of bitTo1 and bitCount */
+x=x|(x>>1);
+x=x|(x>>2);
+x=x|(x>>4);
+x=x|(x>>8);
+x=x|(x>>16);
 
 
 
-  return 2;
+int twoGrouper=0x55;//used 55 instead of AA to avoid arithmetic shift problem
+int fourGrouper=0x33;
+int eightGrouper=0xF;
+int sixteenGrouper=0xFF;
+int thirtytwoGrouper=0xFF;
+//printf("ater assignemtn\n 2, %x \n 4, %x\n 8, %x\n 16,%x \n 32,%x\n",twoGrouper,fourGrouper,eightGrouper,sixteenGrouper,thirtytwoGrouper);  
+twoGrouper=((((((twoGrouper<<8)+twoGrouper)<<8)+twoGrouper)<<8)+twoGrouper);
+x=(x&twoGrouper)+((x>>1)&twoGrouper);
+fourGrouper=((((((fourGrouper<<8)+fourGrouper)<<8)+fourGrouper)<<8)+fourGrouper);
+x=(x&fourGrouper)+((x>>2)&fourGrouper);
+eightGrouper=((((((eightGrouper<<8)+eightGrouper)<<8)+eightGrouper)<<8)+eightGrouper);
+x=(x&eightGrouper)+((x>>4)&eightGrouper);
+sixteenGrouper=(sixteenGrouper<<16)+sixteenGrouper;
+x=(x&sixteenGrouper)+((x>>8)&sixteenGrouper);
+thirtytwoGrouper=(thirtytwoGrouper<<8)+thirtytwoGrouper;
+x=(x&thirtytwoGrouper)+((x>>16)&thirtytwoGrouper);
+//printf("2, %x \n 4, %x\n 8, %x\n 16,%x \n 32,%x\n",twoGrouper,fourGrouper,eightGrouper,sixteenGrouper,thirtytwoGrouper);  
+return x-1;
+
+
 }
 /* 
  * float_neg - Return bit-level equivalent of expression -f for
